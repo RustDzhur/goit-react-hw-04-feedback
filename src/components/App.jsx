@@ -1,38 +1,36 @@
 import PropTypes from 'prop-types'
-import React, { Component } from 'react';
+import { useState, createContext, useContext } from 'react';
 import { Section } from './Section';
 
-export class App extends Component {
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
-  };
+const feedbackContext = createContext();
+export const useFeedbackContext = () => useContext(feedbackContext);
 
-  onChangeStatistics = e => {
-    const { good, neutral, bad } = this.state;
+export function App () {
+  const [good, setGood] = useState(0);
+  const [neutral, setneutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
+
+  const onChangeStatistics = e => {
+
     const ID = e.currentTarget.id;
     if (ID === '1') {
-      this.setState({
-        good: good + 1,
-      });
+      setGood(good + 1);
     }
     if (ID === '2') {
-      this.setState({
-        neutral: neutral + 1,
-      });
+      setneutral(neutral + 1);
     }
     if (ID === '3') {
-      this.setState({
-        bad: bad + 1,
-      });
+      setBad(bad + 1);
     }
   };
 
-  render() {
-    return <Section title="Please leave feedback" state={this.state} changeState={this.onChangeStatistics}/>;
+    return (
+    <feedbackContext.Provider value={{good, neutral, bad}}>
+      <Section title="Please leave feedback" changeState={onChangeStatistics}/>
+    </feedbackContext.Provider>);
   }
-}
+
 
 App.propTypes  = {
   state: PropTypes.shape({

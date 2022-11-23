@@ -1,49 +1,29 @@
-import { Component } from 'react';
 import { Title, InnerWrapper } from './Section.styled';
 import { FeedbackOptions } from '../FeedbackOptions';
 import { Statistics } from '../Statistics';
 import { Notification } from '../Notification';
 
-export class Section extends Component {
- 
+import { useFeedbackContext } from '../App';
 
-  countTotalFeedback = data => {
-    return Object.values(data).reduce((acc, total) => acc + total, 0);
-  };
+export function Section({ title, changeState }) {
+  const { good, neutral, bad } = useFeedbackContext();
 
-  countPositiveFeedbackPercentage = data => {
-    const total = Object.values(data).reduce((acc, total) => acc + total, 0);
-    const persent = (this.props.state.good * 100) / total;
-    return Math.round(persent);
-  };
-  render() {
-    const title = this.props.title;
+  const totalFeedback = good + neutral + bad;
+  const positiveFeedbackInPercents = Math.round((good * 100) / totalFeedback);
 
-    const totalFeedback = this.countTotalFeedback(this.props.state);
-    const positiveFeedbackInPercents = this.countPositiveFeedbackPercentage(
-      this.props.state
-    );
-    const { good, neutral, bad } = this.props.state;
-    const { changeState } = this.props;
-  
-    return (
-      <InnerWrapper>
-        <Title>{title}</Title>
+  return (
+    <InnerWrapper>
+      <Title>{title}</Title>
 
-        <FeedbackOptions options={changeState} onLeaveFeedback={this.props.state}/>
-        {good || neutral || bad !== 0 ? (
-          <Statistics
-            good={good}
-            neutral={neutral}
-            bad={bad}
-            total={totalFeedback}
-            positivePercentage={positiveFeedbackInPercents}
-          />
-        ) : (
-          <Notification message="There is no feedback" />
-        )}
-      </InnerWrapper>
-    );
-  }
+      <FeedbackOptions options={changeState} />
+      {good || neutral || bad !== 0 ? (
+        <Statistics
+          total={totalFeedback}
+          positivePercentage={positiveFeedbackInPercents}
+        />
+      ) : (
+        <Notification message="There is no feedback" />
+      )}
+    </InnerWrapper>
+  );
 }
-

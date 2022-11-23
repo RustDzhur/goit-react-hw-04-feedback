@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
 import { StatisticBox, Title, TextContent } from './Statistics.styled';
+import {useFeedbackContext} from '../App'
 
-export function Statistics({good, neutral, bad, total, positivePercentage}) {
+export function Statistics({total, positivePercentage}) {
+  const {good, neutral, bad} = useFeedbackContext()
   return (
     <StatisticBox>
       <Title>Statistics</Title>
@@ -15,9 +17,6 @@ export function Statistics({good, neutral, bad, total, positivePercentage}) {
 }
 
 Statistics.propTypes = {
-  good: PropTypes.number.isRequired,
-  neutral: PropTypes.number.isRequired,
-  bad: PropTypes.number.isRequired,
   total: PropTypes.number.isRequired,
   positivePercentage: PropTypes.number.isRequired,
 }
